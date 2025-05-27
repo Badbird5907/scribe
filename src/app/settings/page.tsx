@@ -51,8 +51,8 @@ export default function Page() {
                     id={`api-key-${provider}`}
                     type="text"
                     placeholder={(apiKeyPreview as string | undefined) ?? `Enter ${name} API Key`}
-                    value={models[provider as Provider]?.apiKey || ""}
-                    onChange={e => setApiKey(provider as Provider, e.target.value)}
+                    value={models[provider]?.apiKey ?? ""}
+                    onChange={e => setApiKey(provider, e.target.value)}
                     autoComplete="off"
                   />
                 </div>

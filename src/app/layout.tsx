@@ -5,6 +5,8 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "next-themes";
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -24,7 +26,12 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
       <body>
         <ThemeProvider defaultTheme="dark" attribute="class">
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <TooltipProvider>
+              {children}
+              <Toaster />
+            </TooltipProvider>
+          </TRPCReactProvider>
         </ThemeProvider>
       </body>
     </html>

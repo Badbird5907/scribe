@@ -51,6 +51,10 @@ export const providers: Record<string, LLMProvider> = {
       "gemini-2.5-flash-preview-04-17": {
         name: "Gemini 2.5 Flash Exp",
         description: "A really fast and cheap model.",
+      },
+      "gemini-2.0-flash-lite": {
+        name: "Gemini 2.0 Flash Lite",
+        description: "A really fast and cheap model.",
       }
     }
   }

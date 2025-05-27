@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -122,4 +123,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.autocomplete-suggestion {
+  @apply select-none;
 }

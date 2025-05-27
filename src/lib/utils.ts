@@ -21,3 +21,8 @@ export function deepMerge<T extends object>(target: T, ...sources: Partial<T>[])
   
   return result
 }
+
+export const clamp = (value: number, min: number, max: number) => {
+  return Math.min(Math.max(value, min), max);
+}
+
