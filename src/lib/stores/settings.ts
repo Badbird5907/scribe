@@ -5,8 +5,8 @@ import { deepMerge } from "@/lib/utils";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import type { LanguageModel, LanguageModelV1 } from "ai";
 import type { ProviderV1 } from "@ai-sdk/provider";
+import { createOllama } from "ollama-ai-provider";
 
 type LLMProvider = {
   name: string;
@@ -57,7 +57,22 @@ export const providers: Record<string, LLMProvider> = {
         description: "A really fast and cheap model.",
       }
     }
-  }
+  },
+  // ollama: {
+  //   name: "Ollama",
+  //   apiKeyPreview: "http://127.0.0.1:11434/api",
+  //   create: (apiKey: string) => createOllama({ baseURL: apiKey }),
+  //   models: {
+  //     "llama3.1:8b": {
+  //       name: "Llama 3.1 8B",
+  //       description: "A really fast and cheap model.",
+  //     },
+  //     "llama3.2:1b": {
+  //       name: "Llama 3.2 1B",
+  //       description: "A really fast and cheap model.",
+  //     }
+  //   }
+  // }
 } as const;
 
 export type Provider = keyof typeof providers;

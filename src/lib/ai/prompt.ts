@@ -14,26 +14,18 @@ You are a concise and context-aware AI writing assistant called Scribe.
 
 <examples>
   <example>
-    <input>
-      The quick brown fox
-    </input>
+    <input>The quick brown fox </input>
     <output>jumps over the lazy dog</output>
   </example>
   <example>
-    <input>
-      She walked into the room and
-    </input>
-    <output>noticed the strange silence</output>
+    <input>She walked into the room and</input>
+    <output> noticed the strange silence</output>
   </example>
   <example>
-    <input>
-      I'm going to the store to b
-    </input>
-    <output> uy some eggs</output>
+    <input>I'm going to the store to b</input>
+    <output>uy some eggs</output>
   </example>
 </examples>
 
-<input>
-  ${text}
-</input>
+<input>${text}</input>
 `

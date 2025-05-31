@@ -37,6 +37,7 @@ export const AITextArea = ({ placeholder = "Start typing...", className = "" }: 
 
       setIsLoading(true)
       setError(null)
+      console.log("Getting suggestion for", text)
       
       const model = getModel()
       const { textStream } = streamText({ 
