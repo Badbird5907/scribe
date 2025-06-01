@@ -2,7 +2,7 @@
 
 
 import * as React from 'react'
-import { JSX } from 'react'
+import { type JSX } from 'react'
 
 import { LinkPlugin as LexicalLinkPlugin } from '@lexical/react/LexicalLinkPlugin'
 

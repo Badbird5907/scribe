@@ -13,7 +13,7 @@ import {
   $createTextNode,
   $getSelection,
   $isRangeSelection,
-  TextNode,
+  type TextNode,
 } from "lexical"
 import { createPortal } from "react-dom"
 
@@ -44,7 +44,7 @@ class EmojiOption extends MenuOption {
     super(title)
     this.title = title
     this.emoji = emoji
-    this.keywords = options.keywords || []
+    this.keywords = options.keywords ?? []
   }
 }
 
@@ -67,7 +67,7 @@ export function EmojiPickerPlugin() {
   const [emojis, setEmojis] = useState<Array<Emoji>>([])
   const [isOpen, setIsOpen] = useState(false)
   useEffect(() => {
-    import("../utils/emoji-list").then((file) => setEmojis(file.default))
+    void import("../utils/emoji-list").then((file) => setEmojis(file.default))
   }, [])
 
   const emojiOptions = useMemo(
@@ -75,7 +75,7 @@ export function EmojiPickerPlugin() {
       emojis != null
         ? emojis.map(
             ({ emoji, aliases, tags }) =>
-              new EmojiOption(aliases[0], emoji, {
+              new EmojiOption(aliases[0] ?? "", emoji, {
                 keywords: [...aliases, ...tags],
               })
           )
@@ -128,6 +128,7 @@ export function EmojiPickerPlugin() {
   )
 
   return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     <LexicalTypeaheadMenuPlugin<EmojiOption>
       onQueryChange={setQueryString}

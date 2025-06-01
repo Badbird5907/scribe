@@ -34,9 +34,7 @@ export function BlockFormatDropDown({
             return parent !== null && $isRootOrShadowRoot(parent)
           })
 
-      if (element === null) {
-        element = anchorNode.getTopLevelElementOrThrow()
-      }
+      element ??= anchorNode.getTopLevelElementOrThrow();
 
       const elementKey = element.getKey()
       const elementDOM = activeEditor.getElementByKey(elementKey)

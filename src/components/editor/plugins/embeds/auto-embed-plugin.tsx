@@ -108,7 +108,7 @@ export const TwitterEmbedConfig: CustomEmbedConfig = {
     const match =
       /^https:\/\/(twitter|x)\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)/.exec(text)
 
-    if (match != null) {
+    if (match?.[5] != null && match[1] != null) {
       return {
         id: match[5],
         url: match[1],
@@ -141,7 +141,7 @@ export const FigmaEmbedConfig: CustomEmbedConfig = {
         text
       )
 
-    if (match != null) {
+    if (match?.[3] != null && match?.[0] != null) {
       return {
         id: match[3],
         url: match[0],
@@ -186,7 +186,7 @@ export function AutoEmbedDialog({
       debounce((inputText: string) => {
         const urlMatch = URL_MATCHER.exec(inputText)
         if (embedConfig != null && inputText != null && urlMatch != null) {
-          Promise.resolve(embedConfig.parseUrl(inputText)).then(
+          void Promise.resolve(embedConfig.parseUrl(inputText)).then(
             (parseResult) => {
               setEmbedResult(parseResult)
             }

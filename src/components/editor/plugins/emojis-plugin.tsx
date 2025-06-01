@@ -1,7 +1,7 @@
 "use client"
 
 
-import { JSX, useEffect } from "react"
+import { type JSX, useEffect } from "react"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import type { LexicalEditor } from "lexical"
 import { TextNode } from "lexical"
@@ -12,7 +12,7 @@ import {
   EmojiNode,
 } from "@/components/editor/nodes/emoji-node"
 
-const emojis: Map<string, [string, string]> = new Map([
+const emojis = new Map<string, [string, string]>([
   [":)", ["emoji happysmile", "🙂"]],
   [":D", ["emoji veryhappysmile", "😀"]],
   [":(", ["emoji unhappysmile", "🙁"]],
@@ -23,7 +23,7 @@ function $findAndTransformEmoji(node: TextNode): null | TextNode {
   const text = node.getTextContent()
 
   for (let i = 0; i < text.length; i++) {
-    const emojiData = emojis.get(text[i]) || emojis.get(text.slice(i, i + 2))
+    const emojiData = emojis.get(text[i]!) ?? emojis.get(text.slice(i, i + 2))
 
     if (emojiData !== undefined) {
       const [emojiStyle, emojiText] = emojiData
@@ -36,7 +36,7 @@ function $findAndTransformEmoji(node: TextNode): null | TextNode {
       }
 
       const emojiNode = $createEmojiNode(emojiStyle, emojiText)
-      targetNode.replace(emojiNode)
+      targetNode?.replace(emojiNode)
       return emojiNode
     }
   }

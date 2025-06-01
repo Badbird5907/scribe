@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Suspense, JSX } from 'react'
+import { Suspense, type JSX } from 'react'
 
 import type {
   DOMConversionMap,
@@ -142,15 +142,15 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     this.__src = src
     this.__altText = altText
     this.__maxWidth = maxWidth
-    this.__width = width || 'inherit'
-    this.__height = height || 'inherit'
-    this.__showCaption = showCaption || false
+    this.__width = width ?? 'inherit'
+    this.__height = height ?? 'inherit'
+    this.__showCaption = showCaption ?? false
     this.__caption =
-      caption ||
+      caption ??
       createEditor({
         nodes: [],
       })
-    this.__captionsEnabled = captionsEnabled || captionsEnabled === undefined
+    this.__captionsEnabled = captionsEnabled ?? captionsEnabled === undefined
   }
 
   exportJSON(): SerializedImageNode {

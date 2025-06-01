@@ -21,6 +21,8 @@ import ExcalidrawImage from '@/components/editor/editor-ui/excalidraw-image'
 import { ImageResizer } from '@/components/editor/editor-ui/image-resizer'
 import type { BinaryFiles } from '@excalidraw/excalidraw/types'
 import type { AppState } from '@excalidraw/excalidraw/types'
+import type { NonDeleted } from '@excalidraw/excalidraw/element/types'
+import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
 
 export default function ExcalidrawComponent({
   nodeKey,
@@ -176,14 +178,18 @@ export default function ExcalidrawComponent({
   }, [])
 
   const {
-    elements = [],
-    files = {},
-    appState = {},
-  } = useMemo(() => JSON.parse(data), [data])
+    elements,
+    files,
+    appState ,
+  } = useMemo(() => JSON.parse(data) as {
+    elements: ExcalidrawInitialElements
+    files: BinaryFiles
+    appState: AppState
+  }, [data])
 
   const closeModal = useCallback(() => {
     setModalOpen(false)
-    if (elements.length === 0) {
+    if (elements?.length === 0) {
       editor.update(() => {
         const node = $getNodeByKey(nodeKey)
         if (node) {
@@ -191,7 +197,7 @@ export default function ExcalidrawComponent({
         }
       })
     }
-  }, [editor, nodeKey, elements.length])
+  }, [editor, nodeKey, elements])
 
   return (
     <>
@@ -210,7 +216,7 @@ export default function ExcalidrawComponent({
           closeOnClickOutside={false}
         />
       )}
-      {elements.length > 0 && (
+      {elements && elements.length > 0 && (
         <button
           ref={buttonRef}
           className={`m-0 border-0 bg-transparent p-0 ${isSelected ? 'user-select-none ring-2 ring-primary ring-offset-2' : ''}`}
@@ -218,7 +224,7 @@ export default function ExcalidrawComponent({
           <ExcalidrawImage
             imageContainerRef={imageContainerRef}
             className="image"
-            elements={elements}
+            elements={elements as NonDeleted<ExcalidrawElement>[]}
             files={files}
             appState={appState}
             width={width}

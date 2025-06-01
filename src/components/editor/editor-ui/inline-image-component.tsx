@@ -1,6 +1,6 @@
-
 import * as React from 'react'
-import { Suspense, useCallback, useEffect, useRef, useState, JSX } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import type { JSX } from 'react'
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
@@ -49,7 +49,7 @@ const imageCache = new Set()
 
 function useSuspenseImage(src: string) {
   if (!imageCache.has(src)) {
-    throw new Promise((resolve) => {
+    const promise = new Promise((resolve) => {
       const img = new Image()
       img.src = src
       img.onload = () => {
@@ -57,6 +57,8 @@ function useSuspenseImage(src: string) {
         resolve(null)
       }
     })
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
+    throw promise
   }
 }
 
@@ -79,8 +81,9 @@ function LazyImage({
 }): JSX.Element {
   useSuspenseImage(src)
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
-      className={className || undefined}
+      className={className ?? undefined}
       src={src}
       alt={altText}
       ref={imageRef}
@@ -105,7 +108,13 @@ export function UpdateInlineImageDialog({
   onClose: () => void
 }): JSX.Element {
   const editorState = activeEditor.getEditorState()
-  const node = editorState.read(() => $getNodeByKey(nodeKey) as InlineImageNode)
+  const node = editorState.read(() => {
+    const node = $getNodeByKey(nodeKey)
+    if (!$isInlineImageNode(node)) {
+      throw new Error('Expected InlineImageNode')
+    }
+    return node
+  })
   const [altText, setAltText] = useState(node.getAltText())
   const [showCaption, setShowCaption] = useState(node.getShowCaption())
   const [position, setPosition] = useState<Position>(node.getPosition())

@@ -10,12 +10,6 @@ import {
 
 import dynamic from 'next/dynamic'
 
-import {
-  type AppState,
-  type BinaryFiles,
-  type ExcalidrawImperativeAPI,
-  type ExcalidrawInitialDataState,
-} from '@excalidraw/excalidraw/types/types'
 import { DialogTrigger } from '@radix-ui/react-dialog'
 
 import { Button } from '@/components/ui/button'
@@ -23,8 +17,9 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogFooter,
 } from '@/components/ui/dialog'
+
+import type { AppState, BinaryFiles, ExcalidrawImperativeAPI, ExcalidrawInitialDataState } from '@excalidraw/excalidraw/types'
 
 const Excalidraw = dynamic(() => import('./excalidraw'), { ssr: false })
 

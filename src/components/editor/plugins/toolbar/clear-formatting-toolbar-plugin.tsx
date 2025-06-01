@@ -41,10 +41,10 @@ export function ClearFormattingToolbarPlugin() {
             // Use a separate variable to ensure TS does not lose the refinement
             let textNode = node
             if (idx === 0 && anchor.offset !== 0) {
-              textNode = textNode.splitText(anchor.offset)[1] || textNode
+              textNode = textNode.splitText(anchor.offset)[1] ?? textNode
             }
             if (idx === nodes.length - 1) {
-              textNode = textNode.splitText(focus.offset)[0] || textNode
+              textNode = textNode.splitText(focus.offset)[0] ?? textNode
             }
             /**
              * If the selected text has one format applied

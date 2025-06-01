@@ -42,7 +42,7 @@ import { CAN_USE_DOM } from '@/components/editor/shared/can-use-dom'
 export type InsertImagePayload = Readonly<ImagePayload>
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
-  CAN_USE_DOM ? (targetWindow || window).getSelection() : null
+  CAN_USE_DOM ? (targetWindow ?? window).getSelection() : null
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
   createCommand('INSERT_IMAGE_COMMAND')
@@ -112,7 +112,7 @@ export function InsertImageUploadedDialogBody({
       return ''
     }
     if (files !== null) {
-      reader.readAsDataURL(files[0])
+      reader.readAsDataURL(files[0] as Blob)
     }
   }
 
@@ -332,7 +332,7 @@ function getDragImageData(event: DragEvent): null | InsertImagePayload {
   if (!dragData) {
     return null
   }
-  const { type, data } = JSON.parse(dragData)
+  const { type, data } = JSON.parse(dragData) as { type: string; data: InsertImagePayload }
   if (type !== 'image') {
     return null
   }
@@ -353,8 +353,7 @@ function canDropImage(event: DragEvent): boolean {
     target &&
     target instanceof HTMLElement &&
     !target.closest('code, span.editor-image') &&
-    target.parentElement &&
-    target.parentElement.closest('div.ContentEditable__root')
+    target.parentElement?.closest('div.ContentEditable__root')
   )
 }
 
@@ -371,7 +370,7 @@ function getDragSelection(event: DragEvent): Range | null | undefined {
   if (document.caretRangeFromPoint) {
     range = document.caretRangeFromPoint(event.clientX, event.clientY)
   } else if (event.rangeParent && domSelection !== null) {
-    domSelection.collapse(event.rangeParent, event.rangeOffset || 0)
+    domSelection.collapse(event.rangeParent, event.rangeOffset ?? 0)
     range = domSelection.getRangeAt(0)
   } else {
     throw Error(`Cannot get the selection when dragging`)

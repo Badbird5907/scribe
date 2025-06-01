@@ -75,7 +75,7 @@ export function ElementFormatToolbarPlugin() {
           ? matchingParent.getFormatType()
           : $isElementNode(node)
             ? node.getFormatType()
-            : parent?.getFormatType() || 'left'
+            : parent?.getFormatType() ?? 'left'
       )
     }
   }

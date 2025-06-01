@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Suspense, useCallback, useEffect, useRef, useState, JSX } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState, type JSX } from 'react'
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { useCollaborationContext } from '@lexical/react/LexicalCollaborationContext'
@@ -49,6 +49,7 @@ export const RIGHT_CLICK_IMAGE_COMMAND: LexicalCommand<MouseEvent> =
 
 function useSuspenseImage(src: string) {
   if (!imageCache.has(src)) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw new Promise((resolve) => {
       const img = new Image()
       img.src = src
@@ -85,7 +86,7 @@ function LazyImage({
   useSuspenseImage(src)
   return (
     <img
-      className={className || undefined}
+      className={className ?? undefined}
       src={src}
       alt={altText}
       ref={imageRef}
@@ -250,7 +251,7 @@ export default function ImageComponent({
           $isRangeSelection(latestSelection) &&
           latestSelection.getNodes().length === 1
         ) {
-          editor.dispatchCommand(RIGHT_CLICK_IMAGE_COMMAND, event as MouseEvent)
+          editor.dispatchCommand(RIGHT_CLICK_IMAGE_COMMAND, event)
         }
       })
     },

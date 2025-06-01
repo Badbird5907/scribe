@@ -151,10 +151,10 @@ export class YouTubeNode extends DecoratorBlockNode {
   }
 
   decorate(_editor: LexicalEditor, config: EditorConfig): JSX.Element {
-    const embedBlockTheme = config.theme.embedBlock || {}
+    const embedBlockTheme = config.theme.embedBlock ?? {}
     const className = {
-      base: embedBlockTheme.base || '',
-      focus: embedBlockTheme.focus || '',
+      base: embedBlockTheme.base ?? '',
+      focus: embedBlockTheme.focus ?? '',
     }
     return (
       <YouTubeComponent

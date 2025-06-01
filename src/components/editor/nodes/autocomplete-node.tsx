@@ -85,7 +85,7 @@ export class AutocompleteNode extends DecoratorNode<JSX.Element | null> {
     if (this.__uuid !== UUID) {
       return null
     }
-    return <AutocompleteComponent className={config.theme.autocomplete} />
+    return <AutocompleteComponent className={(config.theme as { autocomplete: string }).autocomplete} />
   }
 }
 

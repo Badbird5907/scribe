@@ -1,7 +1,7 @@
 "use client";
 
-import { useSettingsStore, type AllModelKeys } from "@/lib/stores/settings";
-import { providers, type Provider } from "@/lib/stores/settings";
+import { useSettingsStore } from "@/lib/stores/settings";
+import { providers } from "@/lib/stores/settings";
 import React from "react";
 import {
   Card,
@@ -11,8 +11,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Combobox } from "@/components/ui/combobox";
-import { Popover } from "@/components/ui/popover";
 import { ModelSelect } from "@/components/model-select";
 
 export default function Page() {

@@ -63,6 +63,7 @@ function TweetComponent({
   const createTweet = useCallback(async () => {
     try {
       // @ts-expect-error Twitter is attached to the window.
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       await window.twttr.widgets.createTweet(tweetID, containerRef.current)
 
       setIsTweetLoading(false)
@@ -92,7 +93,7 @@ function TweetComponent({
           script.onerror = onError as OnErrorEventHandler
         }
       } else {
-        createTweet()
+        void createTweet()
       }
 
       if (previousTweetIDRef) {
@@ -188,10 +189,10 @@ export class TweetNode extends DecoratorBlockNode {
   }
 
   decorate(editor: LexicalEditor, config: EditorConfig): JSX.Element {
-    const embedBlockTheme = config.theme.embedBlock || {}
+    const embedBlockTheme = config.theme.embedBlock ?? {}
     const className = {
-      base: embedBlockTheme.base || '',
-      focus: embedBlockTheme.focus || '',
+      base: embedBlockTheme.base ?? '',
+      focus: embedBlockTheme.focus ?? '',
     }
     return (
       <TweetComponent
