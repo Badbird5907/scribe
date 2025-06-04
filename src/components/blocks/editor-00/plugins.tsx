@@ -34,6 +34,7 @@ import { BlockInsertPlugin } from '@/components/editor/plugins/toolbar/block-ins
 import { InsertCollapsibleContainer } from '@/components/editor/plugins/toolbar/block-insert/insert-collapsible-container';
 import { InsertExcalidraw } from '@/components/editor/plugins/toolbar/block-insert/insert-excalidraw';
 import { AutocompletePlugin } from '@/components/editor/plugins/autocomplete-plugin';
+import { CustomHistoryPlugin } from '@/components/editor/history/history';
 
 export function Plugins() {
   const [floatingAnchorElem, setFloatingAnchorElem] =
@@ -47,74 +48,76 @@ export function Plugins() {
 
   return (
     <div className="relative">
-      <ToolbarPlugin>
-        {({ blockType }) => (
-          <div className="vertical-align-middle sticky top-0 z-10 flex gap-2 overflow-auto border-b p-1">
-            <HistoryToolbarPlugin />
-            <Separator orientation="vertical" className="h-8" />
-            <BlockFormatDropDown>
-              <FormatParagraph />
-              <FormatHeading levels={['h1', 'h2', 'h3']} />
-              <FormatNumberedList />
-              <FormatBulletedList />
-              <FormatCheckList />
-              <FormatCodeBlock />
-              <FormatQuote />
-            </BlockFormatDropDown>
-            {blockType === 'code' ? (
-              <CodeLanguageToolbarPlugin />
-            ) : (
-              <>
-                <FontFamilyToolbarPlugin />
-                <FontSizeToolbarPlugin />
-                <Separator orientation="vertical" className="h-8" />
-                <FontFormatToolbarPlugin format="bold" />
-                <FontFormatToolbarPlugin format="italic" />
-                <FontFormatToolbarPlugin format="underline" />
-                <FontFormatToolbarPlugin format="strikethrough" />
-                <Separator orientation="vertical" className="h-8" />
-                <SubSuperToolbarPlugin />
-                <LinkToolbarPlugin />
-                <Separator orientation="vertical" className="h-8" />
-                <ClearFormattingToolbarPlugin />
-                <Separator orientation="vertical" className="h-8" />
-                <FontColorToolbarPlugin />
-                <FontBackgroundToolbarPlugin />
-                <Separator orientation="vertical" className="h-8" />
-                <ElementFormatToolbarPlugin />
-                <Separator orientation="vertical" className="h-8" />
-                <BlockInsertPlugin>
-                  <InsertHorizontalRule />
-                  <InsertPageBreak />
-                  <InsertImage />
-                  <InsertInlineImage />
-                  <InsertCollapsibleContainer />
-                  <InsertExcalidraw />
-                  <InsertTable />
-                  <InsertColumnsLayout />
-                  <InsertEmbeds />
-                </BlockInsertPlugin>
-              </>
-            )}
-          </div>
-        )}
-      </ToolbarPlugin>
-      {/* toolbar plugins */}
-      <div className="relative">
-        <RichTextPlugin
-          contentEditable={
-            <div className="">
-              <div className="" ref={onRef}>
-                <ContentEditable placeholder={'Start typing ...'} />
-              </div>
+        <ToolbarPlugin>
+          {({ blockType }) => (
+            <div className="vertical-align-middle sticky top-0 z-10 flex gap-2 overflow-auto border-b p-1">
+              <HistoryToolbarPlugin />
+              <Separator orientation="vertical" className="h-8" />
+              <BlockFormatDropDown>
+                <FormatParagraph />
+                <FormatHeading levels={['h1', 'h2', 'h3']} />
+                <FormatNumberedList />
+                <FormatBulletedList />
+                <FormatCheckList />
+                <FormatCodeBlock />
+                <FormatQuote />
+              </BlockFormatDropDown>
+              {blockType === 'code' ? (
+                <CodeLanguageToolbarPlugin />
+              ) : (
+                <>
+                  <FontFamilyToolbarPlugin />
+                  <FontSizeToolbarPlugin />
+                  <Separator orientation="vertical" className="h-8" />
+                  <FontFormatToolbarPlugin format="bold" />
+                  <FontFormatToolbarPlugin format="italic" />
+                  <FontFormatToolbarPlugin format="underline" />
+                  <FontFormatToolbarPlugin format="strikethrough" />
+                  <Separator orientation="vertical" className="h-8" />
+                  <SubSuperToolbarPlugin />
+                  <LinkToolbarPlugin />
+                  <Separator orientation="vertical" className="h-8" />
+                  <ClearFormattingToolbarPlugin />
+                  <Separator orientation="vertical" className="h-8" />
+                  <FontColorToolbarPlugin />
+                  <FontBackgroundToolbarPlugin />
+                  <Separator orientation="vertical" className="h-8" />
+                  <ElementFormatToolbarPlugin />
+                  <Separator orientation="vertical" className="h-8" />
+                  <BlockInsertPlugin>
+                    <InsertHorizontalRule />
+                    <InsertPageBreak />
+                    <InsertImage />
+                    <InsertInlineImage />
+                    <InsertCollapsibleContainer />
+                    <InsertExcalidraw />
+                    <InsertTable />
+                    <InsertColumnsLayout />
+                    <InsertEmbeds />
+                  </BlockInsertPlugin>
+                </>
+              )}
             </div>
-          }
-          ErrorBoundary={LexicalErrorBoundary}
-        />
-        {/* editor plugins */}
-        <AutocompletePlugin />
-      </div>
-      {/* actions plugins */}
+          )}
+        </ToolbarPlugin>
+        {/* toolbar plugins */}
+        <div className="relative">
+          <RichTextPlugin
+            contentEditable={
+              <div className="">
+                <div className="" ref={onRef}>
+                  <ContentEditable placeholder={'Start typing ...'} />
+                </div>
+              </div>
+            }
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          {/* editor plugins */}
+          {/* <HistoryPlugin /> */}
+          <CustomHistoryPlugin />
+          <AutocompletePlugin />
+        </div>
+        {/* actions plugins */}
     </div>
   );
 }

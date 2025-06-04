@@ -69,11 +69,7 @@ export class AutocompleteNode extends DecoratorNode<JSX.Element | null> {
     this.__uuid = uuid
   }
 
-  updateDOM(
-    prevNode: unknown,
-    dom: HTMLElement,
-    config: EditorConfig
-  ): boolean {
+  updateDOM(): boolean {
     return false
   }
 

@@ -6,11 +6,12 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import type { ProviderV1 } from "@ai-sdk/provider";
-import { createOllama } from "ollama-ai-provider";
+import { createCustomProvider } from "@/lib/ai/hackclub";
 
 type LLMProvider = {
   name: string;
-  apiKeyPreview: string;
+  apiKeyPreview?: string;
+  noApiKey?: boolean;
   create: (apiKey: string) => ProviderV1;
   mutateModelId?: (modelId: string) => string;
   models: Record<string, { name: string; description?: string }>;
@@ -57,6 +58,18 @@ export const providers: Record<string, LLMProvider> = {
         description: "A really fast and cheap model.",
       }
     }
+  },
+  hackclub: {
+    name: "Hack Club",
+    noApiKey: true,
+    create: () => createCustomProvider(),
+    models: {
+      "hackclub": {
+        name: "Hack Club Model",
+        description: "A free model!",
+      }
+    }
+
   },
   // ollama: {
   //   name: "Ollama",
@@ -111,7 +124,7 @@ export const useSettingsStore = create<SettingsStore>(
             mistral: { apiKey: "" },
             google: { apiKey: "" },
           },
-          selectedModel: "openai:gpt-4o-mini" as AllModelKeys,
+          selectedModel: "hackclub:hackclub" as AllModelKeys,
         },
         setSelectedModel: (model) => set({ 
           ai: { 

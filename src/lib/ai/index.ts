@@ -13,18 +13,19 @@ export const getModel = (): LanguageModelV1 => {
   if (createdModelCache[cacheKey] && createdModelCache[cacheKey].apiKey === apiKey) {
     return createdModelCache[cacheKey].model;
   }
-
-  if (!apiKey) {
-    throw new Error(`No API key found for provider: ${provider}`);
-  }
   const providerObj = providers[provider];
   if (!providerObj) {
+    console.error(`Provider ${provider} not found`);
     throw new Error(`Provider ${provider} not found`);
   }
-  const providerInstance = providerObj.create(apiKey);
+  if (!apiKey && !providerObj.noApiKey) {
+    console.error(`No API key found for provider: ${provider}`);
+    throw new Error(`No API key found for provider: ${provider}`);
+  }
+  const providerInstance = providerObj.create(apiKey!);
   const modelId = providerObj.mutateModelId?.(model) ?? model;
   const languageModel = providerInstance.languageModel(modelId);
-  createdModelCache[cacheKey] = { model: languageModel, apiKey };
+  createdModelCache[cacheKey] = { model: languageModel, apiKey: apiKey! };
   return languageModel;
 }
 

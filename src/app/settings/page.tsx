@@ -41,14 +41,15 @@ export default function Page() {
           </CardHeader>
           <CardContent className="space-y-6">
             {Object.entries(providers).map(([provider, providerObj]) => {
-              const { apiKeyPreview, name } = providerObj;
+              const { apiKeyPreview, name, noApiKey } = providerObj;
+              if (noApiKey) return null;
               return (
                 <div key={provider} className="space-y-2">
                   <Label htmlFor={`api-key-${provider}`}>{name} API Key</Label>
                   <Input
                     id={`api-key-${provider}`}
                     type="text"
-                    placeholder={(apiKeyPreview as string | undefined) ?? `Enter ${name} API Key`}
+                    placeholder={apiKeyPreview ?? `Enter ${name} API Key`}
                     value={models[provider]?.apiKey ?? ""}
                     onChange={e => setApiKey(provider, e.target.value)}
                     autoComplete="off"

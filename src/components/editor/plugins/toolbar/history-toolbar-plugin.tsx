@@ -8,7 +8,6 @@ import {
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
   COMMAND_PRIORITY_CRITICAL,
-  LexicalEditor,
   REDO_COMMAND,
   UNDO_COMMAND,
 } from 'lexical'

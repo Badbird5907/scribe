@@ -1,9 +1,9 @@
 "use client"
 
-import { type JSX, useCallback, useEffect } from "react"
+import { type JSX, useCallback, useEffect, useState } from "react"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { mergeRegister } from "@lexical/utils"
-import type { NodeKey } from "lexical"
+import type { LexicalNode, NodeKey, UpdateListenerPayload } from "lexical"
 import {
   $createTextNode,
   $getNodeByKey,
@@ -25,6 +25,7 @@ import { addSwipeRightListener } from "@/components/editor/utils/swipe"
 import { getModel } from "@/lib/ai"
 import { streamText } from "ai"
 import { generateAutocompletePrompt } from "@/lib/ai/prompt"
+import debounce from "lodash.debounce"
 
 type SearchPromise = {
   dismiss: () => void
@@ -36,59 +37,87 @@ export const uuid = Math.random()
   .replace(/[^a-z]+/g, "")
   .substr(0, 5)
 
+const fetch = debounce(async (
+  editorText: string,
+  resolve: (v: null | string) => void,
+  reject: (e: unknown) => void,
+  dismissCheck: () => boolean
+) => {
+  if (!editorText.trim()) return resolve(null);
+  try {
+    const model = getModel();
+    console.log("editorText", { editorText });
+    const prompt = generateAutocompletePrompt(editorText);
+    console.log("prompt", { prompt });
+    const { textStream } = streamText({
+      model,
+      prompt,
+      maxTokens: 20,
+      providerOptions: {
+        google: {
+          thinkingConfig: {
+            thinkingBudget: 0,
+          },
+        },
+      },
+    });
+    let suggestionText = "";
+    for await (const part of textStream) {
+      suggestionText += part;
+    }
+    let suggestion = suggestionText.trim();
+    if (suggestion.startsWith("<output>")) {
+      suggestion = suggestion.slice(8);
+    }
+    if (suggestion.endsWith("</output>")) {
+      suggestion = suggestion.slice(0, -9);
+    }
+    if (suggestion.startsWith("<sp/>")) {
+      suggestion = " " + suggestion.slice(5);
+    }
+    console.log("suggestionText", { suggestionText, suggestion });
+    if (dismissCheck() || !suggestion) return resolve(null);
+    resolve(suggestion);
+  } catch (err) {
+    console.error("Error fetching autocomplete suggestion", err);
+    reject(err);
+  }
+}, 300);
 // TODO query should be custom
 function useQuery(): (editorText: string) => SearchPromise {
+  // Store the latest dismiss function for each call
+  const dismissRef = { current: () => {} };
+
+  // Debounced async function to fetch suggestion
+  const debouncedFetch = useCallback(
+    fetch,
+    []
+  );
+
   return useCallback((editorText: string) => {
     let isDismissed = false;
     const dismiss = () => {
       isDismissed = true;
     };
-    const promise = (async () => {
-      if (!editorText.trim()) return null;
-      try {
-        const model = getModel();
-        console.log("editorText", {editorText});
-        const { textStream } = streamText({
-          model,
-          prompt: generateAutocompletePrompt(editorText),
-          maxTokens: 50,
-          providerOptions: {
-            google: {
-              thinkingConfig: {
-                thinkingBudget: 0,
-              },
-            },
-          },
-        });
-        let suggestionText = "";
-        for await (const textPart of textStream) {
-          if (isDismissed) break;
-          suggestionText += textPart;
-        }
-        let suggestion = suggestionText.trim();
-        if (suggestion.startsWith("<output>")) {
-          suggestion = suggestion.slice(8);
-        }
-        if (suggestion.endsWith("</output>")) {
-          suggestion = suggestion.slice(0, -9);
-        }
-        console.log("suggestionText", {suggestionText, suggestion});
-        return isDismissed || !suggestion ? null : suggestion;
-      } catch (err) {
-        return null;
-      }
-    })();
+    dismissRef.current = dismiss;
+    const promise = new Promise<null | string>((resolve, reject) => {
+      void debouncedFetch(editorText, resolve, reject, () => isDismissed);
+    }).catch((e) => {
+      console.error("Error fetching autocomplete suggestion", e);
+      throw e;
+    });
     return { dismiss, promise };
-  }, []);
+  }, [debouncedFetch]);
 }
 
 export function AutocompletePlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext()
-  const [, setSuggestion] = useSharedAutocompleteContext()
+  const [suggestion, setSuggestion] = useSharedAutocompleteContext()
   const query = useQuery()
+  const [autoNodeKeyState, setAutocompleteNodeKey] = useState<null | NodeKey>(null)
 
   useEffect(() => {
-    let autocompleteNodeKey: null | NodeKey = null
+    let autocompleteNodeKey: null | NodeKey = autoNodeKeyState
     let lastText: null | string = null
     let lastSuggestion: null | string = null
     let searchPromise: null | SearchPromise = null
@@ -98,6 +127,7 @@ export function AutocompletePlugin(): JSX.Element | null {
       if (autocompleteNode?.isAttached()) {
         autocompleteNode.remove()
         autocompleteNodeKey = null
+        setAutocompleteNodeKey(null)
       }
       if (searchPromise !== null) {
         searchPromise.dismiss()
@@ -146,9 +176,15 @@ export function AutocompletePlugin(): JSX.Element | null {
         $clearSuggestion()
       }
     }
-    function handleUpdate() {
+    function handleUpdate(payload: UpdateListenerPayload) {
       editor.update(() => {
-        const selection = $getSelection()
+        console.log("handleUpdate", payload);
+        if (payload.tags.has("historic")) {
+          console.log(" -> clearSuggestion", payload);
+          $clearSuggestion()
+          return
+        }
+        // only update if it was caused by a user input        
         const editorText = $getRoot().getTextContent()
         if (!editorText.trim()) {
           $clearSuggestion()
@@ -179,7 +215,13 @@ export function AutocompletePlugin(): JSX.Element | null {
       if (autocompleteNode === null) {
         return false
       }
-      const textNode = $createTextNode(lastSuggestion)
+      let suggestionText = lastSuggestion;
+      let prefix = '';
+      if (suggestionText.startsWith('<sp/>')) {
+        prefix = ' ';
+        suggestionText = suggestionText.slice(5);
+      }
+      const textNode = $createTextNode(prefix + suggestionText)
       autocompleteNode.replace(textNode)
       textNode.selectNext()
       $clearSuggestion()
@@ -206,6 +248,8 @@ export function AutocompletePlugin(): JSX.Element | null {
     }
 
     const rootElem = editor.getRootElement()
+    
+    setAutocompleteNodeKey(autocompleteNodeKey)
 
     return mergeRegister(
       editor.registerNodeTransform(
@@ -228,7 +272,7 @@ export function AutocompletePlugin(): JSX.Element | null {
         : []),
       unmountSuggestion
     )
-  }, [editor, query, setSuggestion])
+  }, [autoNodeKeyState, editor, query, setSuggestion])
 
   return null
 }
