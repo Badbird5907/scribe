@@ -35,6 +35,13 @@ import { InsertCollapsibleContainer } from '@/components/editor/plugins/toolbar/
 import { InsertExcalidraw } from '@/components/editor/plugins/toolbar/block-insert/insert-excalidraw';
 import { AutocompletePlugin } from '@/components/editor/plugins/autocomplete-plugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Bold, Italic, Underline, Strikethrough, Type, Palette } from "lucide-react";
 
 export function Plugins() {
   const [floatingAnchorElem, setFloatingAnchorElem] =
@@ -50,7 +57,7 @@ export function Plugins() {
     <div className="relative">
         <ToolbarPlugin>
           {({ blockType }) => (
-            <div className="vertical-align-middle sticky top-0 z-10 flex gap-2 overflow-auto border-b p-1 bg-gray-50 dark:bg-neutral-900 px-4">
+            <div className="vertical-align-middle sticky top-0 z-10 flex gap-2 overflow-x-auto border-b p-1 bg-gray-50 dark:bg-neutral-900 px-4 max-w-full items-center">
               <HistoryToolbarPlugin />
               <Separator orientation="vertical" className="h-8" />
               <BlockFormatDropDown>
@@ -69,19 +76,41 @@ export function Plugins() {
                   <FontFamilyToolbarPlugin />
                   <FontSizeToolbarPlugin />
                   <Separator orientation="vertical" className="h-8" />
-                  <FontFormatToolbarPlugin format="bold" />
-                  <FontFormatToolbarPlugin format="italic" />
-                  <FontFormatToolbarPlugin format="underline" />
-                  <FontFormatToolbarPlugin format="strikethrough" />
-                  <Separator orientation="vertical" className="h-8" />
+                  
+                  {/* Font Format Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8">
+                        <Type className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      <FontFormatToolbarPlugin format="bold" />
+                      <FontFormatToolbarPlugin format="italic" />
+                      <FontFormatToolbarPlugin format="underline" />
+                      <FontFormatToolbarPlugin format="strikethrough" />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   <SubSuperToolbarPlugin />
                   <LinkToolbarPlugin />
                   <Separator orientation="vertical" className="h-8" />
                   <ClearFormattingToolbarPlugin />
                   <Separator orientation="vertical" className="h-8" />
-                  <FontColorToolbarPlugin />
-                  <FontBackgroundToolbarPlugin />
-                  <Separator orientation="vertical" className="h-8" />
+
+                  {/* Color Options Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8">
+                        <Palette className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      <FontColorToolbarPlugin />
+                      <FontBackgroundToolbarPlugin />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   <ElementFormatToolbarPlugin />
                   <Separator orientation="vertical" className="h-8" />
                   <BlockInsertPlugin>
@@ -114,10 +143,8 @@ export function Plugins() {
           />
           {/* editor plugins */}
           <HistoryPlugin />
-          {/* <CustomHistoryPlugin /> */}
           <AutocompletePlugin />
         </div>
-        {/* actions plugins */}
     </div>
   );
 }

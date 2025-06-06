@@ -7,11 +7,16 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import type { ProviderV1 } from "@ai-sdk/provider";
 import { createCustomProvider } from "@/lib/ai/hackclub";
+import GoogleLogo from "@/components/logos/google";
+import OpenAILogo from "@/components/logos/openai";
+import HackclubLogo from "@/components/logos/hackclub";
+import AnthropicLogo from "@/components/logos/anthropic";
 
 type LLMProvider = {
   name: string;
   apiKeyPreview?: string;
   noApiKey?: boolean;
+  logo?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   create: (apiKey: string) => ProviderV1;
   mutateModelId?: (modelId: string) => string;
   models: Record<string, { name: string; description?: string }>;
@@ -21,6 +26,7 @@ export const providers: Record<string, LLMProvider> = {
   openai: {
     name: "OpenAI",
     apiKeyPreview: "sk-proj-...",
+    logo: OpenAILogo,
     create: (apiKey: string) => createOpenAI({ apiKey }),
     models: {
       "gpt-4o": {
@@ -36,6 +42,7 @@ export const providers: Record<string, LLMProvider> = {
   anthropic: {
     name: "Anthropic",
     apiKeyPreview: "sk-ant-api03-...",
+    logo: AnthropicLogo,
     create: (apiKey: string) => createAnthropic({ apiKey }),
     models: {
       "claude-3-5-sonnet": {
@@ -46,6 +53,7 @@ export const providers: Record<string, LLMProvider> = {
   google: {
     name: "Google",
     apiKeyPreview: "AIzaSyB...",
+    logo: GoogleLogo,
     create: (apiKey: string) => createGoogleGenerativeAI({ apiKey }),
     mutateModelId: (modelId: string) => `models/${modelId}`,
     models: {
@@ -62,6 +70,7 @@ export const providers: Record<string, LLMProvider> = {
   hackclub: {
     name: "Hack Club",
     noApiKey: true,
+    logo: HackclubLogo,
     create: () => createCustomProvider(),
     models: {
       "hackclub": {

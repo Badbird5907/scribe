@@ -15,7 +15,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuAction,
   SidebarInput,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
@@ -89,7 +88,7 @@ export function DocumentsList() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.18 }}
-                className="list-none"
+                className="list-none px-2"
               >
                 <SidebarMenuItem className="h-full group">
                   <SidebarMenuButton asChild isActive={currentId === doc.id} className="h-full hover:cursor-pointer" onClick={() => navigate(`/${doc.id}`)}>

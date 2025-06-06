@@ -100,48 +100,61 @@ export function ElementFormatToolbarPlugin() {
   }
 
   return (
-    <ToggleGroup
-      type="single"
-      value={elementFormat}
-      defaultValue={elementFormat}
-      onValueChange={handleValueChange}
-      className="flex gap-1"
-    >
-      {/* Alignment toggles */}
-      {Object.entries(ELEMENT_FORMAT_OPTIONS).map(([value, option]) => (
+    <div className="flex items-center">
+      {/* Alignment toggles group */}
+      <ToggleGroup
+        type="single"
+        value={elementFormat}
+        defaultValue={elementFormat}
+        onValueChange={handleValueChange}
+        className="flex rounded-l-md border border-r-0"
+      >
+        {Object.entries(ELEMENT_FORMAT_OPTIONS).map(([value, option], idx, arr) => (
+          <ToggleGroupItem
+            key={value}
+            value={value}
+            variant={'outline'}
+            aria-label={option.name}
+            size="sm"
+            className={
+              `h-8 w-8 p-0 ${idx === 0 ? 'rounded-l-md' : ''} ${idx === arr.length - 1 ? 'rounded-none' : ''}`
+            }
+          >
+            {option.icon}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+
+      <Separator orientation="vertical" className="h-8 px-2" />
+
+      {/* Indentation toggles group */}
+      <ToggleGroup
+        type="single"
+        value={elementFormat}
+        defaultValue={elementFormat}
+        onValueChange={handleValueChange}
+        className="flex rounded-r-md border border-l-0"
+      >
         <ToggleGroupItem
-          key={value}
-          value={value}
+          value="outdent"
+          aria-label="Outdent"
           variant={'outline'}
-          aria-label={option.name}
           size="sm"
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 rounded-none"
         >
-          {option.icon}
+          <IndentDecreaseIcon className="size-4" />
         </ToggleGroupItem>
-      ))}
 
-      <Separator orientation="vertical" className="h-8" />
-      {/* Indentation toggles */}
-      <ToggleGroupItem
-        value="outdent"
-        aria-label="Outdent"
-        variant={'outline'}
-        size="sm"
-        className="h-8 w-8"
-      >
-        <IndentDecreaseIcon className="size-4" />
-      </ToggleGroupItem>
-
-      <ToggleGroupItem
-        value="indent"
-        variant={'outline'}
-        aria-label="Indent"
-        size="sm"
-        className="h-8 w-8"
-      >
-        <IndentIncreaseIcon className="size-4" />
-      </ToggleGroupItem>
-    </ToggleGroup>
+        <ToggleGroupItem
+          value="indent"
+          variant={'outline'}
+          aria-label="Indent"
+          size="sm"
+          className="h-8 w-8 rounded-r-md"
+        >
+          <IndentIncreaseIcon className="size-4" />
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </div>
   )
 }
