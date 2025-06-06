@@ -33,8 +33,8 @@ function DocumentEditor({ settings }: { settings?: boolean }) {
   }, 450), [doc, updateDocument]);
   return (
     <SidebarProvider>
-      <div className="w-full h-screen flex">
         <DocumentsList />
+        <div className="w-full h-screen flex">
         <div className="flex-1 h-screen">
           <AnimatePresence mode="wait">
             {settings ? (
