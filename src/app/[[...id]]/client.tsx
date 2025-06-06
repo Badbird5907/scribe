@@ -62,9 +62,10 @@ function DocumentEditor({ settings }: { settings?: boolean }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full h-full flex items-center justify-center text-gray-500"
+                className="w-full h-full flex flex-col items-center justify-center text-gray-500"
               >
                 <p>Document not found</p>
+                <p>Try creating a new document with the button in the top left!</p>
               </motion.div>
             )}
           </AnimatePresence>
