@@ -34,7 +34,7 @@ import { BlockInsertPlugin } from '@/components/editor/plugins/toolbar/block-ins
 import { InsertCollapsibleContainer } from '@/components/editor/plugins/toolbar/block-insert/insert-collapsible-container';
 import { InsertExcalidraw } from '@/components/editor/plugins/toolbar/block-insert/insert-excalidraw';
 import { AutocompletePlugin } from '@/components/editor/plugins/autocomplete-plugin';
-import { CustomHistoryPlugin } from '@/components/editor/history/history';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 
 export function Plugins() {
   const [floatingAnchorElem, setFloatingAnchorElem] =
@@ -50,7 +50,7 @@ export function Plugins() {
     <div className="relative">
         <ToolbarPlugin>
           {({ blockType }) => (
-            <div className="vertical-align-middle sticky top-0 z-10 flex gap-2 overflow-auto border-b p-1">
+            <div className="vertical-align-middle sticky top-0 z-10 flex gap-2 overflow-auto border-b p-1 bg-gray-50 dark:bg-neutral-900 px-4">
               <HistoryToolbarPlugin />
               <Separator orientation="vertical" className="h-8" />
               <BlockFormatDropDown>
@@ -113,8 +113,8 @@ export function Plugins() {
             ErrorBoundary={LexicalErrorBoundary}
           />
           {/* editor plugins */}
-          {/* <HistoryPlugin /> */}
-          <CustomHistoryPlugin />
+          <HistoryPlugin />
+          {/* <CustomHistoryPlugin /> */}
           <AutocompletePlugin />
         </div>
         {/* actions plugins */}

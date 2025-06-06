@@ -13,7 +13,10 @@ import {
   $setSelection,
   COMMAND_PRIORITY_LOW,
   KEY_ARROW_RIGHT_COMMAND,
+  KEY_BACKSPACE_COMMAND,
+  KEY_ESCAPE_COMMAND,
   KEY_TAB_COMMAND,
+  RootNode,
 } from "lexical"
 
 import { useSharedAutocompleteContext } from "@/components/editor/context/shared-autocomplete-context"
@@ -176,14 +179,8 @@ export function AutocompletePlugin(): JSX.Element | null {
         $clearSuggestion()
       }
     }
-    function handleUpdate(payload: UpdateListenerPayload) {
+    function handleUpdate() {
       editor.update(() => {
-        console.log("handleUpdate", payload);
-        if (payload.tags.has("historic")) {
-          console.log(" -> clearSuggestion", payload);
-          $clearSuggestion()
-          return
-        }
         // only update if it was caused by a user input        
         const editorText = $getRoot().getTextContent()
         if (!editorText.trim()) {
@@ -256,7 +253,7 @@ export function AutocompletePlugin(): JSX.Element | null {
         AutocompleteNode,
         $handleAutocompleteNodeTransform
       ),
-      editor.registerUpdateListener(handleUpdate),
+      editor.registerNodeTransform(RootNode, handleUpdate),
       editor.registerCommand(
         KEY_TAB_COMMAND,
         $handleKeypressCommand,
@@ -265,6 +262,28 @@ export function AutocompletePlugin(): JSX.Element | null {
       editor.registerCommand(
         KEY_ARROW_RIGHT_COMMAND,
         $handleKeypressCommand,
+        COMMAND_PRIORITY_LOW
+      ),
+      editor.registerCommand(
+        KEY_ESCAPE_COMMAND,
+        () => {
+          if (autocompleteNodeKey !== null) {
+            $clearSuggestion();
+            return true;
+          }
+          return false;
+        },
+        COMMAND_PRIORITY_LOW
+      ),
+      editor.registerCommand(
+        KEY_BACKSPACE_COMMAND,
+        () => {
+          if (autocompleteNodeKey !== null) {
+            $clearSuggestion();
+            return false; // Allow the backspace to proceed
+          }
+          return false;
+        },
         COMMAND_PRIORITY_LOW
       ),
       ...(rootElem !== null

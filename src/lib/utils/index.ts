@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
+import type { SerializedEditorState, SerializedElementNode, SerializedLexicalNode, SerializedParagraphNode, SerializedTextNode } from "lexical"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -26,3 +27,15 @@ export const clamp = (value: number, min: number, max: number) => {
   return Math.min(Math.max(value, min), max);
 }
 
+export const getBadLexicalTextContent = (state: SerializedEditorState<SerializedLexicalNode>): string => {
+  const extract = (node: SerializedLexicalNode): string => {
+    if (node.type === "text") {
+      return (node as SerializedTextNode).text;
+    }
+    if ("children" in node) {
+      return (node as SerializedElementNode).children.map((child) => extract(child)).join(" ");
+    }
+    return "";
+  }
+  return extract(state.root);
+}

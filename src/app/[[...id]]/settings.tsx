@@ -13,23 +13,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ModelSelect } from "@/components/model-select";
 
-export default function Page() {
+export default function Settings() {
   const settings = useSettingsStore();
   const setApiKey = settings.setApiKey;
-  const setSelectedModel = settings.setSelectedModel;
-  const { models, selectedModel } = settings.ai;
+  // const setSelectedModel = settings.setSelectedModel;
+  const { models } = settings.ai;
 
   // Build all model options in the format provider:model
-  const modelOptions = Object.entries(providers).flatMap(([provider, providerObj]) => {
-    const models = providerObj.models as Record<string, { name: string; description?: string }>;
-    return Object.keys(models).map((model) => {
-      const modelObj = models[model];
-      return {
-        value: `${provider}:${model}`,
-        label: `${providerObj.name} - ${modelObj ? modelObj.name : model}`,
-      };
-    });
-  });
+  // const modelOptions = Object.entries(providers).flatMap(([provider, providerObj]) => {
+  //   const models = providerObj.models as Record<string, { name: string; description?: string }>;
+  //   return Object.keys(models).map((model) => {
+  //     const modelObj = models[model];
+  //     return {
+  //       value: `${provider}:${model}`,
+  //       label: `${providerObj.name} - ${modelObj ? modelObj.name : model}`,
+  //     };
+  //   });
+  // });
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-8">
@@ -64,7 +64,7 @@ export default function Page() {
             <CardTitle>Model Selection</CardTitle>
           </CardHeader>
           <CardContent>
-            <Label htmlFor="model-select">Select Model</Label>
+            <Label htmlFor="model-select" className="mb-2">Select Model</Label>
             <ModelSelect />
           </CardContent>
         </Card>
