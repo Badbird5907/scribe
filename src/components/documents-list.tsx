@@ -74,8 +74,8 @@ export function DocumentsList() {
             className="pr-16"
           />
           <span className={cn("absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 px-2 py-0.5 rounded text-xs text-muted-foreground select-none pointer-events-none", searchQuery.length > 0 && "hidden")}>
-            <span className="bg-neutral-900 text-white rounded px-1.5 py-0.5 text-[10px] font-mono">{isMac ? "⌘" : "Ctrl"}</span>
-            <span className="bg-neutral-900 text-white rounded px-1.5 py-0.5 text-[10px] font-mono">K</span>
+            <span className="bg-white text-black dark:bg-neutral-900 dark:text-white rounded px-1.5 py-0.5 text-[10px] font-mono border border-neutral-300 dark:border-neutral-700">{isMac ? "⌘" : "Ctrl"}</span>
+            <span className="bg-white text-black dark:bg-neutral-900 dark:text-white rounded px-1.5 py-0.5 text-[10px] font-mono border border-neutral-300 dark:border-neutral-700">K</span>
           </span>
         </div>
       </SidebarHeader>
@@ -101,7 +101,9 @@ export function DocumentsList() {
                         </span>
                       </div>
                       {/* Gradient overlay, only visible on hover */}
-                      <div className="pointer-events-none absolute top-0 right-0 h-full w-16 opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{background: 'linear-gradient(to left, rgba(24,24,27,0.85) 70%, transparent)'}} />
+                      <div
+                        className="pointer-events-none absolute top-0 right-0 h-full w-16 opacity-0 group-hover:opacity-100 transition-opacity duration-200 dark:bg-gradient-to-l dark:from-zinc-900/85 dark:to-transparent bg-gradient-to-l from-zinc-200/85 to-transparent"
+                      />
                       {/* Buttons fly in from the right, only on hover */}
                       <motion.div
                         initial={{ x: 40, opacity: 0 }}
